@@ -1,12 +1,12 @@
 # Project Log
 
-## Week 1  - area & perimeter calculator (for complex geometric shapes)
+## Week 1  - area & perimeter calculator
 
 - **Library used:**  Tkinter & PIL
 
 ### Day 1
 
-- **Date:** March 1, 2025
+- **Date:** April 1, 2025
 - **Task:** Research and layout finalises
 - **Challenges:** none
 - **Solution:** none
@@ -14,24 +14,24 @@
 
 ### Day 2
 
-- **Date:** March 2, 2025
-- **Task:** Learning to use tkinter
+- **Date:** April 2, 2025
+- **Task:** Making the program's foront end
 - **Challenges:** Difficulty in understanding some concepts
 - **Solution:** Taking help of ChatGpt
-- **Next Steps:** Building the main window of the program
+- **Next Steps:** Building the back end of the program
 
 ### Day 3
 
-- **Date:** March 3, 2025
-- **Task:** Building the main window of the program
-- **Challenges:** giving functionality to the wigets and setting them up
+- **Date:** April 4, 2025
+- **Task:** Building the back end of the program
+- **Challenges:** Event handeling, logic implementation and error handeling
 - **Solution:** Referencing Tkinter documentation and solving error with the help of ChatGpt
-- **Next Steps:** Bulding the sub sub window
+- **Next Steps:** Improving the GUI
 
 ## Day 4
 
-- **Date:** March 4,2025
-- **Task:** Bulding the sub sub window
-- **Challange:** Too many to count
-- **Solution:** Handled it somehow
-- **Next Steps:** Mainly debugging, minor adjustments completing the README of Week 1
+- **Date:** March 5,2025
+- **Task:** Improving the GUI
+- **Challange:**
+- **Solution:**
+- **Next Steps:**

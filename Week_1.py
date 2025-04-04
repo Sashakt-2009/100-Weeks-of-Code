@@ -1,5 +1,7 @@
-import tkinter as tk 
+import tkinter as tk
+from math import pi 
 from PIL import Image, ImageTk
+
 
 size = '800x600'   
 
@@ -323,8 +325,8 @@ def calculate(*args):
     if selected_shape.get() == "Circle":
         try:
             radius = float(args[0]())
-            area = 3.14 * radius ** 2
-            perimeter = 2 * 3.14 * radius
+            area = pi * radius ** 2
+            perimeter = 2 * pi * radius
             area_label.config(text=f"Area: {area}")
             perimeter_label.config(text=f"Perimeter: {perimeter}")
         except ValueError:

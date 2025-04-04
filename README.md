@@ -1,11 +1,51 @@
-# 100 Weeks of Code
+# 💯 100 Weeks of Code
 
- ***100 Weeks of Code*** is a python project in which we will make *1 python project per week.* After every 10 weeks we will try to combine the previous 10 projects.
- This 100 week project wil start from very basic and go throgh *simple calculators* to *string manipuators* to **sorting algorithms** and **use database**, create GUIs,
- making a sudoku solver at last we will make an **AI to generate an music based on input** and ***combine our knowledge to make an intilligent assistant***.
+**100 Weeks of Code** is a long-term Python journey where we create **one project every week**—starting from basic tools and utilities, gradually moving into complex domains like **machine learning**, **game development**, **GUI programming**, and even **AI music generation**.
 
- The purpose of this project is to elevate my coding skills. This project mainly focuses on game devlopment,machine learning, and advanced AI.
+Every 10 weeks, projects will be integrated to build something larger and more meaningful using the skills learned in those weeks. The grand finale? A full-fledged **intelligent assistant** powered by everything we've learned.
 
-## Week 1 - area & perimeter calculator (for complex geometric shapes)
+---
 
-We have to make a area & perimeter calculator.
+## 📌 Purpose
+
+The aim of this challenge is to **sharpen programming skills**, develop consistency, and explore various fields in computer science with hands-on experience.
+
+Focus areas include:
+
+- ✅ Core Python
+- ✅ Math & logic-based programming
+- ✅ GUIs
+- ✅ APIs & databases
+- ✅ AI and ML
+- ✅ Full-stack application logic
+
+---
+
+## 🚀 Week 1 - Area & Perimeter Calculator (for Complex Geometric Shapes)
+
+This week’s project is a **geometry calculator** that computes **area** and **perimeter** for the following shapes:
+
+- Circle
+- Rectangle
+- Square
+- Triangle
+- Parallelogram
+- Trapezium
+
+### 🔧 Features
+
+- Takes user input via the terminal.
+- Uses `math.pi` for precise circle calculations.
+- Cleanly structured with helper functions for each shape.
+- Handles invalid inputs with graceful error messages.
+
+### 📂 File
+
+- `Week_1.py` — the main script.
+
+### ▶️ How to Run
+
+Make sure you have Python 3 installed. Then:
+
+```bash
+python Week_1.py
