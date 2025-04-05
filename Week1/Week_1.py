@@ -1,45 +1,62 @@
-import tkinter as tk
+import tkinter as tk, os, sys
+
 from math import pi 
 from PIL import Image, ImageTk
 
 
-size = '800x600'   
+size = '800x400'   
+
+area_label = None
+perimeter_label = None 
 
 root = tk.Tk()
 root.title("area & perimeter calculator")   # set the title of the window
-
+root.configure(bg="white")   # set the background color of the window
 root.geometry(size)   # set the size of the window
 
-display_ref = {}  
-
-shape_label = tk.Label(root, text="Select a shape to calculate its area and perimeter:", font=("Arial", 16), anchor="w")
-shape_label.place(x=10, y=10)
-
-
-
 Shapes ={                                                         # create a list of shapes 
-    "Triangle":
-      r"C:\Users\gdlga\OneDrive\Desktop\python codes personal\100_weeks\Images\tri.jpeg" ,
+    "Triangle": "tri.jpeg" ,
     
-    "Square":
-     r"C:\Users\gdlga\OneDrive\Desktop\python codes personal\100_weeks\Images\sq.jpeg",
+    "Square": "sq.jpeg",
 
-    "Rectangle":
-     r"C:\Users\gdlga\OneDrive\Desktop\python codes personal\100_weeks\Images\rect.jpeg",
+    "Rectangle": "llgm.jpeg",
 
-    "Parallelogram": 
-    r"C:\Users\gdlga\OneDrive\Desktop\python codes personal\100_weeks\Images\llgm.jpeg",
+    "Parallelogram": "llgm.jpeg",
 
-    "Rhombus": 
-    r"C:\Users\gdlga\OneDrive\Desktop\python codes personal\100_weeks\Images\rhom.jpeg",
+    "Rhombus": "rhom.jpeg",
 
-    "Trapezium":
-    r"C:\Users\gdlga\OneDrive\Desktop\python codes personal\100_weeks\Images\Trapezoid-90.jpg",
+    "Trapezium": "Trapezoid-90.jpg",
 
-    "Circle": 
-    r"C:\Users\gdlga\OneDrive\Desktop\python codes personal\100_weeks\Images\circle.jpeg"}   
+    "Circle": "circle.jpeg"}
 
 selected_shape = tk.StringVar(root)  # create a variable to hold the selected shape
+
+def get_asset_path(filename):
+    base_path = os.path.dirname(__file__)  # gets the directory where the .py file is
+    return os.path.join(base_path, "Images", filename)
+
+display_ref = {}  
+for shape in Shapes:
+    pil_img = Image.open(get_asset_path(Shapes[shape]))
+    pil_img = pil_img.resize((300, 300))
+    img = ImageTk.PhotoImage(pil_img)
+    display_ref[shape] = img
+
+
+def main_window():
+        # Clear existing widgets
+    for widget in root.winfo_children():
+          widget.place_forget()  # Forget the previous widgets
+
+    shape_label = tk.Label(root, text="Select a shape to calculate its area and perimeter:", font=("Arial", 16), anchor="w", bg="white")
+    shape_label.place(x=10, y=10)
+
+    for shape in Shapes:   # loop through the shapes
+        shape_radio = tk.Radiobutton(root, text=shape, value=shape, variable=selected_shape, command= lambda : update_gui(selected_shape.get()), font=("Arial", 14), bg="white")
+        shape_radio.place(x=10, y=50 + 30 * list(Shapes.keys()).index(shape))              
+
+main_window()
+
 
 def update_gui(selected):
     # Clear existing widgets
@@ -60,193 +77,210 @@ def update_gui(selected):
         trapezium_GUI(root)
     if selected_shape.get() == "Circle":   # if the selected shape is a circle
         circle_GUI(root)
+    
+    return_button = tk.Button(root, text="Back", command= lambda: main_window(), font=("Arial", 14),)
+    return_button.place(x=10, y=350)
         
 
-
-for shape in Shapes:   # loop through the shapes
-    shape_radio = tk.Radiobutton(root, text=shape, value=shape, variable=selected_shape, command= lambda : update_gui(selected_shape.get()), font=("Arial", 14),)
-    shape_radio.place(x=10, y=50 + 30 * list(Shapes.keys()).index(shape))              
-
-area_label = None
-perimeter_label = None 
 
 def triangle_GUI(root):
     global area_label, perimeter_label
     
-    triangle_label = tk.Label(root, text="Enter the base and height of the triangle:", font=("Arial", 16), anchor="w")
+    triangle_label = tk.Label(root, text="Enter the base and height of the triangle:", font=("Arial", 16), anchor="w", bg="white")
     triangle_label.place(x=10, y=10)
+
+    img_label = tk.Label(root, image=display_ref["Triangle"])
+    img_label.place(x=500, y=0)  # Adjust the position as needed
     
-    base_label = tk.Label(root, text="Base:", font=("Arial", 14), anchor="w")
+    base_label = tk.Label(root, text="Base:", font=("Arial", 14), anchor="w", bg="white")
     base_label.place(x=10, y=50)
     
-    base_entry: int = tk.Entry(root, font=("Arial", 14))
+    base_entry: int = tk.Entry(root, font=("Arial", 14), bg="gray")
     base_entry.place(x=10, y=80)
     
-    height_label = tk.Label(root, text="Height:", font=("Arial", 14), anchor="w")
+    height_label = tk.Label(root, text="Height:", font=("Arial", 14), anchor="w", bg="white")
     height_label.place(x=10, y=110)
     
-    height_entry: int = tk.Entry(root, font=("Arial", 14))
+    height_entry: int = tk.Entry(root, font=("Arial", 14), bg="gray")
     height_entry.place(x=10, y=140)
     
     calculate_button = tk.Button(root, text="Calculate",command=lambda: calculate(base_entry.get, height_entry.get), font=("Arial", 14))
     calculate_button.place(x=10, y=170)
     
-    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w")
+    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w", bg="white")
     area_label.place(x=10, y=210)
     
-    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w")
+    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w", bg="white")
     perimeter_label.place(x=10, y=240)
 
 
 
 def square_GUI(root):
     global area_label, perimeter_label
-    square_label = tk.Label(root, text="Enter the side length of the square:", font=("Arial", 16), anchor="w")
+    square_label = tk.Label(root, text="Enter the side length of the square:", font=("Arial", 16), anchor="w", bg="white")
     square_label.place(x=10, y=10)
+
+    img_label = tk.Label(root, image=display_ref["Square"])
+    img_label.place(x=500, y=0)  
     
-    side_label = tk.Label(root, text="Side Length:", font=("Arial", 14), anchor="w")
+    side_label = tk.Label(root, text="Side Length:", font=("Arial", 14), anchor="w",bg="white")
     side_label.place(x=10, y=50)
     
-    side_entry = tk.Entry(root, font=("Arial", 14))
+    side_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     side_entry.place(x=10, y=80)
     
     calculate_button = tk.Button(root, text="Calculate", command= lambda: calculate(side_entry.get), font=("Arial", 14),)
     calculate_button.place(x=10, y=110)
     
-    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w")
+    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w", bg="white")
     area_label.place(x=10, y=150)
     
-    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w")
+    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w", bg="white")
     perimeter_label.place(x=10, y=180)
     
 def rectangle_GUI(root):
     global area_label, perimeter_label
-    rectangle_label = tk.Label(root, text="Enter the length and width of the rectangle:", font=("Arial", 16), anchor="w")
+    rectangle_label = tk.Label(root, text="Enter the length and width of the rectangle:", font=("Arial", 16), anchor="w", bg="white")
     rectangle_label.place(x=10, y=10)
+
+    img_label = tk.Label(root, image=display_ref["Rectangle"])
+    img_label.place(x=500, y=0)
     
-    length_label = tk.Label(root, text="Length:", font=("Arial", 14), anchor="w")
+    length_label = tk.Label(root, text="Length:", font=("Arial", 14), anchor="w", bg="white")
     length_label.place(x=10, y=50)
     
-    length_entry = tk.Entry(root, font=("Arial", 14))
+    length_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     length_entry.place(x=10, y=80)
     
-    width_label = tk.Label(root, text="Width:", font=("Arial", 14), anchor="w")
+    width_label = tk.Label(root, text="Width:", font=("Arial", 14), anchor="w", bg="white")
     width_label.place(x=10, y=110)
     
-    width_entry = tk.Entry(root, font=("Arial", 14))
+    width_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     width_entry.place(x=10, y=140)
     
     calculate_button = tk.Button(root, text="Calculate", command= lambda: calculate(length_entry.get, width_entry.get), font=("Arial", 14),)
     calculate_button.place(x=10, y=170)
     
-    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w")
+    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w", bg="white")
     area_label.place(x=10, y=210)
     
-    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w")
+    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w", bg="white")
     perimeter_label.place(x=10, y=240)
 
 def parallelogram_GUI(root):    
     global area_label, perimeter_label
-    parallelogram_label = tk.Label(root, text="Enter the base and height of the parallelogram:", font=("Arial", 16), anchor="w")
+    parallelogram_label = tk.Label(root, text="Enter the base and height of the parallelogram:", font=("Arial", 16), anchor="w", bg="white")
     parallelogram_label.place(x=10, y=10)
 
-    base_label = tk.Label(root, text="Base:", font=("Arial", 14), anchor="w")
+    img_label = tk.Label(root, image=display_ref["Parallelogram"])
+    img_label.place(x=500, y=0)
+
+    base_label = tk.Label(root, text="Base:", font=("Arial", 14), anchor="w", bg="white")
     base_label.place(x=10, y=50)
     
-    base_entry = tk.Entry(root, font=("Arial", 14))
+    base_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     base_entry.place(x=10, y=80)
     
-    height_label = tk.Label(root, text="Height:", font=("Arial", 14), anchor="w")
+    height_label = tk.Label(root, text="Height:", font=("Arial", 14), anchor="w", bg="white")
     height_label.place(x=10, y=110)
     
-    height_entry = tk.Entry(root, font=("Arial", 14))
+    height_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     height_entry.place(x=10, y=140)
     
     calculate_button = tk.Button(root, text="Calculate", command= lambda: calculate(base_entry.get, height_entry.get), font=("Arial", 14))
     calculate_button.place(x=10, y=170)
     
-    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w")
+    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w", bg="white")
     area_label.place(x=10, y=210)
     
-    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w")
+    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w", bg="white")
     perimeter_label.place(x=10, y=240)
 
 def rhombus_GUI(root):
     global area_label, perimeter_label
-    rhombus_label = tk.Label(root, text="Enter the base and height of the rhoumbus:", font=("Arial", 16), anchor="w")
+    rhombus_label = tk.Label(root, text="Enter the base and height of the rhoumbus:", font=("Arial", 16), anchor="w", bg="white")
     rhombus_label.place(x=10, y=10)
 
-    height_label = tk.Label(root, text="Enter the height of the rhombus:", font=("Arial", 16), anchor="w")
+    img_label = tk.Label(root, image=display_ref["Rhombus"])
+    img_label.place(x=500, y=0)
+
+    height_label = tk.Label(root, text="Enter the height of the rhombus:", font=("Arial", 16), anchor="w", bg="white")
     height_label.place(x=10, y=50)
     
-    base_label = tk.Label(root, text="Base:", font=("Arial", 14), anchor="w")
+    base_label = tk.Label(root, text="Base:", font=("Arial", 14), anchor="w", bg="white")
     base_label.place(x=10, y=110)
 
     calculate_button = tk.Button(root, text="Calculate", command= lambda: calculate(height_entry.get, base_entry.get), font=("Arial", 14),)
     calculate_button.place(x=10, y=170)
 
-    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w")
+    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w", bg="white")
     area_label.place(x=10, y=210)
 
-    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w") 
+    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w", bg="white") 
     perimeter_label.place(x=10, y=240)
 
-    height_entry = tk.Entry(root, font=("Arial", 14))
+    height_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     height_entry.place(x=10, y=80)
 
-    base_entry = tk.Entry(root, font=("Arial", 14))
+    base_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     base_entry.place(x=10, y=140)
 
 def trapezium_GUI(root):
     global area_label, perimeter_label
-    trapezium_label = tk.Label(root, text="Enter the lengths of the two parallel sides and the height:", font=("Arial", 16), anchor="w")
+    trapezium_label = tk.Label(root, text="Enter the lengths of the two parallel sides and the height:", font=("Arial", 16), anchor="w", bg="white")
     trapezium_label.place(x=10, y=10)
+
+    img_label = tk.Label(root, image=display_ref["Trapezium"])
+    img_label.place(x=500, y=0)
     
-    base1_label = tk.Label(root, text="Base 1:", font=("Arial", 14), anchor="w")
+    base1_label = tk.Label(root, text="Base 1:", font=("Arial", 14), anchor="w", bg="white")
     base1_label.place(x=10, y=50)
     
-    base1_entry = tk.Entry(root, font=("Arial", 14))
+    base1_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     base1_entry.place(x=10, y=80)
     
-    base2_label = tk.Label(root, text="Base 2:", font=("Arial", 14), anchor="w")
+    base2_label = tk.Label(root, text="Base 2:", font=("Arial", 14), anchor="w", bg="white")
     base2_label.place(x=10, y=110)
     
-    base2_entry = tk.Entry(root, font=("Arial", 14))
+    base2_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     base2_entry.place(x=10, y=140)
     
-    height_label = tk.Label(root, text="Height:", font=("Arial", 14), anchor="w")
+    height_label = tk.Label(root, text="Height:", font=("Arial", 14), anchor="w", bg="white")
     height_label.place(x=10, y=170)
     
-    height_entry = tk.Entry(root, font=("Arial", 14))
+    height_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     height_entry.place(x=10, y=200)
     
     calculate_button = tk.Button(root, text="Calculate", command= lambda: calculate(base1_entry.get, base2_entry.get, height_entry.get), font=("Arial", 14),)
     calculate_button.place(x=10, y=230)
     
-    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w")
+    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w", bg="white")
     area_label.place(x=10, y=270)
     
-    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w")
+    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w", bg="white")
     perimeter_label.place(x=10, y=300)
 
 def circle_GUI(root):
     global area_label, perimeter_label
-    circle_label = tk.Label(root, text="Enter the radius of the circle:", font=("Arial", 16), anchor="w")
+    circle_label = tk.Label(root, text="Enter the radius of the circle:", font=("Arial", 16), anchor="w", bg="white")
     circle_label.place(x=10, y=10)
-    
-    radius_label = tk.Label(root, text="Radius:", font=("Arial", 14), anchor="w")
+
+    img_label = tk.Label(root, image=display_ref["Circle"])
+    img_label.place(x=500, y=0)
+
+    radius_label = tk.Label(root, text="Radius:", font=("Arial", 14), anchor="w", bg="white")
     radius_label.place(x=10, y=50)
     
-    radius_entry = tk.Entry(root, font=("Arial", 14))
+    radius_entry = tk.Entry(root, font=("Arial", 14), bg="gray")
     radius_entry.place(x=10, y=80)
     
     calculate_button = tk.Button(root, text="Calculate", command= lambda: calculate(radius_entry.get), font=("Arial", 14),)
     calculate_button.place(x=10, y=110)
     
-    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w")
+    area_label = tk.Label(root, text="Area:", font=("Arial", 14), anchor="w", bg="white")
     area_label.place(x=10, y=150)
     
-    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w")
+    perimeter_label = tk.Label(root, text="Perimeter:", font=("Arial", 14), anchor="w", bg="white")
     perimeter_label.place(x=10, y=180)
 
 def calculate(*args):
