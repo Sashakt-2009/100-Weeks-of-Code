@@ -48,4 +48,4 @@ This week’s project is a **geometry calculator** that computes **area** and **
 Make sure you have Python 3 installed. Then:
 
 ```bash
-python Week_1.py
+run Week1\dist\Week1.exe

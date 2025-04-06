@@ -1,8 +1,8 @@
 # Project Log
 
-## Week 1  - area & perimeter calculator
+## Week 1  - Area & Perimeter Calculator
 
-- **Library used:**  Tkinter & PIL
+- **Library used:**  Tkinter, PIL, math, os & sys
 
 ### Day 1
 
@@ -28,10 +28,20 @@
 - **Solution:** Referencing Tkinter documentation and solving error with the help of ChatGpt
 - **Next Steps:** Improving the GUI
 
-## Day 4
+### Day 4
 
-- **Date:** March 5,2025
+- **Date:** April 5,2025
 - **Task:** Improving the GUI
-- **Challange:**
-- **Solution:**
-- **Next Steps:**
+- **Challange:** None
+- **Solution:** None
+- **Next Steps:** Converting evervthing into a `.exe`
+
+### Day 5
+
+- **Date:** April 6,2025
+- **Task:** Converting evervthing into a `.exe`
+- **Challange:** pyinstaller usage and implementation
+- **Solution:** chatgpt
+- **Next Steps:** Week 2
+
+## Week 2  - Unit Converter
