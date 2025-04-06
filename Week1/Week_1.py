@@ -31,13 +31,18 @@ Shapes ={                                                         # create a lis
 
 selected_shape = tk.StringVar(root)  # create a variable to hold the selected shape
 
-def get_asset_path(filename):
-    base_path = os.path.dirname(__file__)  # gets the directory where the .py file is
-    return os.path.join(base_path, "Images", filename)
+if getattr(sys, 'frozen', False):
+    # Running as compiled .exe
+    base_path = sys._MEIPASS
+else:
+    # Running as script
+    base_path = os.path.abspath(".")
+
 
 display_ref = {}  
 for shape in Shapes:
-    pil_img = Image.open(get_asset_path(Shapes[shape]))
+    image_path = os.path.join(base_path, "Images", Shapes[shape])
+    pil_img = Image.open(image_path)
     pil_img = pil_img.resize((300, 300))
     img = ImageTk.PhotoImage(pil_img)
     display_ref[shape] = img
