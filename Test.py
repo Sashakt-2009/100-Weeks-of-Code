@@ -1,90 +1,100 @@
 import tkinter as tk
-from tkinter import ttk
+import json as js
+import os
 
-root = tk.Tk()
-root.geometry('800x400')
-root.title("Unit Converter")
 
-tab_control = ttk.Notebook(root)
+class Tasks:
+    def __init__(self, task_name, task_status="Pending"):
+        self.task_name = task_name
+        self.task_status = task_status
 
-conversion_factors = {
-    "Length": {
-        "meters": 1,
-        "kilometers": 0.001,
-        "Inch": 39.3700787,
-        "feet": 3.28084,
-        "miles": 0.000621371
-    },
-    "Area": {
-        "meter^2": 1,
-        "kilometer^2": 0.000001,
-        "acre": 0.0002471,
-        "Hectare": 0.0001,
-    },
-    "Weight": {
-        "grams": 1,
-        "kilograms": 0.001,
-        "pounds": 0.00220462,
-        "Carat": 5
-    }
-}
+    def to_dict(self):
+        return {"task_name": self.task_name, "task_status": self.task_status}
 
-# Dictionary to hold widgets per tab
-tab_vars = {}
 
-def convert(unit_type):
-    from_unit = tab_vars[unit_type]["from_var"].get()
-    to_unit = tab_vars[unit_type]["to_var"].get()
-    entry_value = tab_vars[unit_type]["value_entry"].get()
-    label = tab_vars[unit_type]["result_label"]
+class TaskManager:
+    def __init__(self, file_path):
+        self.file_path = file_path
+        self.tasks = self.load_tasks()
 
-    try:
-        value = float(entry_value)
-        from_factor = conversion_factors[unit_type][from_unit]
-        to_factor = conversion_factors[unit_type][to_unit]
-        converted_value = value * ( to_factor/from_factor)
-        label.config(text=f"Converted Value: {converted_value} {to_unit}")
-    except ValueError:
-        label.config(text="Error: Please enter a valid number.")
-    except KeyError:
-        label.config(text="Error: Invalid unit selected.")
+    def add_task(self, task_name):
+        task = Tasks(task_name)
+        self.tasks.append(task)
+        self.save_tasks()
 
-# Build GUI for each unit type
-for unit_type, units_dict in conversion_factors.items():
-    tab = ttk.Frame(tab_control)
-    tab_control.add(tab, text=unit_type)
+    def remove_task(self, index):
+        if 0 <= index < len(self.tasks):
+            del self.tasks[index]
+            self.save_tasks()
 
-    units = list(units_dict.keys())
+    def mark_completed(self, index):
+        if 0 <= index < len(self.tasks):
+            self.tasks[index].task_status = "Completed"
+            self.save_tasks()
 
-    # Per-tab variables
-    from_var = tk.StringVar(value=units[0])
-    to_var = tk.StringVar(value=units[1])
+    def load_tasks(self):
+        if not os.path.exists(self.file_path):
+            return []
+        try:
+            with open(self.file_path, "r") as f:
+                data = js.load(f)
+                return [Tasks(**task) for task in data]
+        except Exception:
+            return []
 
-    ttk.Label(tab, text="From:", font=("Helvetica", 16)).grid(row=0, column=0, padx=10, pady=10, sticky='w')
-    from_option = ttk.Combobox(tab, values=units, textvariable=from_var, state="readonly", width=18)
-    from_option.grid(row=0, column=1, padx=10, pady=10)
+    def save_tasks(self):
+        with open(self.file_path, "w") as f:
+            js.dump([task.to_dict() for task in self.tasks], f, indent=4)
 
-    ttk.Label(tab, text="To:", font=("Helvetica", 16)).grid(row=0, column=2, padx=10, pady=10, sticky='w')
-    to_option = ttk.Combobox(tab, values=units, textvariable=to_var, state="readonly", width=18)
-    to_option.grid(row=0, column=3, padx=10, pady=10)
 
-    ttk.Label(tab, text="Enter Value:", font=("Helvetica", 16)).grid(row=1, column=0, padx=10, pady=10, sticky='w')
-    value_entry = ttk.Entry(tab, font=("Helvetica", 16), width=10)
-    value_entry.grid(row=1, column=1, padx=10, pady=10)
+class TodoApp:
+    def __init__(self, root):
+        self.root = root
+        self.manager = TaskManager("tasks.json")
 
-    result_label = ttk.Label(tab, text="Converted Value:", font=("Helvetica", 16))
-    result_label.grid(row=2, column=0, columnspan=4, padx=10, pady=20, sticky='w')
+        self.task_listbox = tk.Listbox(root, width=50, height=15, font=("Arial", 12))
+        self.task_entry = tk.Entry(root, width=50)
 
-    convert_btn = ttk.Button(tab, text="Convert", command=lambda u=unit_type: convert(u))
-    convert_btn.grid(row=1, column=2, padx=10, pady=10)
+        self.setup_ui()
+        self.refresh_tasks()
 
-    # Store variables and widgets for this tab
-    tab_vars[unit_type] = {
-        "from_var": from_var,
-        "to_var": to_var,
-        "value_entry": value_entry,
-        "result_label": result_label
-    }
+    def setup_ui(self):
+        self.root.title("TO-DO Manager")
+        self.root.geometry("600x400")
 
-tab_control.pack(expand=1, fill="both")
-root.mainloop()
+        self.task_listbox.grid(padx=5, pady=20, rowspan=20)
+        self.task_entry.grid(pady=10)
+
+        tk.Button(self.root, text="Add Task", command=lambda: self.add_task).grid(column=1, row=1, padx=10)
+        tk.Button(self.root, text="Remove Task", command=lambda: self.remove_task).grid(column=1, row=2, padx=10)
+        tk.Button(self.root, text="Task Completed", command=lambda: self.complete_task).grid(column=1, row=3, padx=10)
+
+    def add_task(self):
+        name = self.task_entry.get().strip()
+        if name:
+            self.manager.add_task(name)
+            self.task_entry.delete(0, tk.END)
+            self.refresh_tasks()
+
+    def remove_task(self):
+        selected = self.task_listbox.curselection()
+        if selected:
+            self.manager.remove_task(selected[0])
+            self.refresh_tasks()
+
+    def complete_task(self):
+        selected = self.task_listbox.curselection()
+        if selected:
+            self.manager.mark_completed(selected[0])
+            self.refresh_tasks()
+
+    def refresh_tasks(self):
+        self.task_listbox.delete(0, tk.END)
+        for task in self.manager.tasks:
+            status = "✅" if task.task_status == "Completed" else "⏳"
+            self.task_listbox.insert(tk.END, f"{status} {task.task_name}")
+
+
+if __name__ == "__main__":
+    app = TodoApp(tk.Tk())
+    app.root.mainloop()
